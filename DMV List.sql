@@ -27,6 +27,18 @@ select * from sys.dm_os_schedulers;				--returns 1 row per SQL Server scheduler,
 select * from sys.dm_os_wait_stats;				--returns data about all waits encountered by SQL Server processor threads
 select * from sys.dm_db_stats_properties;		--collects stats about db objects
 
+--See the objects in the cache and plans 	
+SELECT [cp].[refcounts] 
+, [cp].[usecounts] 
+, [cp].[objtype] 
+, [st].[dbid] 
+, [st].[objectid] 
+, [st].[text] 
+, [qp].[query_plan] 
+FROM sys.dm_exec_cached_plans cp 
+CROSS APPLY sys.dm_exec_sql_text ( cp.plan_handle ) st 
+CROSS APPLY sys.dm_exec_query_plan ( cp.plan_handle ) qp;
+
 --Query Store DMVs
 select * from sys.database_query_store_options	--shows configured options
 select * from sys.query_store_plan				--shows plan info
